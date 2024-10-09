@@ -1,0 +1,2047 @@
+{
+  "Resources": {
+    "FileManagerVPC1059B40D": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/Resource"
+      }
+    },
+    "FileManagerVPCPublicSubnet1Subnet3C466787": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/18",
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "kubernetes.io/role/elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1/Subnet"
+      }
+    },
+    "FileManagerVPCPublicSubnet1RouteTable9E0EB4B3": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "Tags": [
+          {
+            "Key": "kubernetes.io/role/elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1/RouteTable"
+      }
+    },
+    "FileManagerVPCPublicSubnet1RouteTableAssociationDC3595E9": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPublicSubnet1RouteTable9E0EB4B3"
+        },
+        "SubnetId": {
+          "Ref": "FileManagerVPCPublicSubnet1Subnet3C466787"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1/RouteTableAssociation"
+      }
+    },
+    "FileManagerVPCPublicSubnet1DefaultRouteE732895E": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPublicSubnet1RouteTable9E0EB4B3"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "FileManagerVPCIGW66C37AE4"
+        }
+      },
+      "DependsOn": [
+        "FileManagerVPCVPCGW469E0D0C"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1/DefaultRoute"
+      }
+    },
+    "FileManagerVPCPublicSubnet1EIPA4EAEF0D": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "kubernetes.io/role/elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1/EIP"
+      }
+    },
+    "FileManagerVPCPublicSubnet1NATGateway186E71DD": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "FileManagerVPCPublicSubnet1Subnet3C466787"
+        },
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "FileManagerVPCPublicSubnet1EIPA4EAEF0D",
+            "AllocationId"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "kubernetes.io/role/elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet1/NATGateway"
+      }
+    },
+    "FileManagerVPCPublicSubnet2Subnet98544FE8": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.64.0/18",
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "kubernetes.io/role/elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet2/Subnet"
+      }
+    },
+    "FileManagerVPCPublicSubnet2RouteTable5AACA1E5": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "Tags": [
+          {
+            "Key": "kubernetes.io/role/elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet2/RouteTable"
+      }
+    },
+    "FileManagerVPCPublicSubnet2RouteTableAssociationAB4E8250": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPublicSubnet2RouteTable5AACA1E5"
+        },
+        "SubnetId": {
+          "Ref": "FileManagerVPCPublicSubnet2Subnet98544FE8"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet2/RouteTableAssociation"
+      }
+    },
+    "FileManagerVPCPublicSubnet2DefaultRouteA5402478": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPublicSubnet2RouteTable5AACA1E5"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "FileManagerVPCIGW66C37AE4"
+        }
+      },
+      "DependsOn": [
+        "FileManagerVPCVPCGW469E0D0C"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PublicSubnet2/DefaultRoute"
+      }
+    },
+    "FileManagerVPCPrivateSubnet1SubnetEEEBBE93": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.128.0/18",
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "kubernetes.io/role/internal-elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet1/Subnet"
+      }
+    },
+    "FileManagerVPCPrivateSubnet1RouteTable3205DF9E": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "Tags": [
+          {
+            "Key": "kubernetes.io/role/internal-elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet1/RouteTable"
+      }
+    },
+    "FileManagerVPCPrivateSubnet1RouteTableAssociation4C9BD50F": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPrivateSubnet1RouteTable3205DF9E"
+        },
+        "SubnetId": {
+          "Ref": "FileManagerVPCPrivateSubnet1SubnetEEEBBE93"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet1/RouteTableAssociation"
+      }
+    },
+    "FileManagerVPCPrivateSubnet1DefaultRoute86AF5EA2": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPrivateSubnet1RouteTable3205DF9E"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "FileManagerVPCPublicSubnet1NATGateway186E71DD"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet1/DefaultRoute"
+      }
+    },
+    "FileManagerVPCPrivateSubnet2SubnetC95A4B0B": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.192.0/18",
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "kubernetes.io/role/internal-elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet2/Subnet"
+      }
+    },
+    "FileManagerVPCPrivateSubnet2RouteTable4E75DFC4": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "Tags": [
+          {
+            "Key": "kubernetes.io/role/internal-elb",
+            "Value": "1"
+          },
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet2/RouteTable"
+      }
+    },
+    "FileManagerVPCPrivateSubnet2RouteTableAssociation21626271": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPrivateSubnet2RouteTable4E75DFC4"
+        },
+        "SubnetId": {
+          "Ref": "FileManagerVPCPrivateSubnet2SubnetC95A4B0B"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet2/RouteTableAssociation"
+      }
+    },
+    "FileManagerVPCPrivateSubnet2DefaultRoute0FFBC65C": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "FileManagerVPCPrivateSubnet2RouteTable4E75DFC4"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "FileManagerVPCPublicSubnet1NATGateway186E71DD"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/PrivateSubnet2/DefaultRoute"
+      }
+    },
+    "FileManagerVPCIGW66C37AE4": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "FileManagerInfraStack/FileManagerVPC"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/IGW"
+      }
+    },
+    "FileManagerVPCVPCGW469E0D0C": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        },
+        "InternetGatewayId": {
+          "Ref": "FileManagerVPCIGW66C37AE4"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerVPC/VPCGW"
+      }
+    },
+    "FileManagerClusterRole95E9C239": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "eks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonEKSClusterPolicy"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/Role/Resource"
+      }
+    },
+    "FileManagerClusterControlPlaneSecurityGroup7E705CD1": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "EKS Control Plane Security Group",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "FileManagerVPC1059B40D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/ControlPlaneSecurityGroup/Resource"
+      }
+    },
+    "FileManagerClusterCreationRole46280444": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "DependsOn": [
+        "FileManagerVPCIGW66C37AE4",
+        "FileManagerVPCPrivateSubnet1DefaultRoute86AF5EA2",
+        "FileManagerVPCPrivateSubnet1RouteTable3205DF9E",
+        "FileManagerVPCPrivateSubnet1RouteTableAssociation4C9BD50F",
+        "FileManagerVPCPrivateSubnet1SubnetEEEBBE93",
+        "FileManagerVPCPrivateSubnet2DefaultRoute0FFBC65C",
+        "FileManagerVPCPrivateSubnet2RouteTable4E75DFC4",
+        "FileManagerVPCPrivateSubnet2RouteTableAssociation21626271",
+        "FileManagerVPCPrivateSubnet2SubnetC95A4B0B",
+        "FileManagerVPCPublicSubnet1DefaultRouteE732895E",
+        "FileManagerVPCPublicSubnet1EIPA4EAEF0D",
+        "FileManagerVPCPublicSubnet1NATGateway186E71DD",
+        "FileManagerVPCPublicSubnet1RouteTable9E0EB4B3",
+        "FileManagerVPCPublicSubnet1RouteTableAssociationDC3595E9",
+        "FileManagerVPCPublicSubnet1Subnet3C466787",
+        "FileManagerVPCPublicSubnet2DefaultRouteA5402478",
+        "FileManagerVPCPublicSubnet2RouteTable5AACA1E5",
+        "FileManagerVPCPublicSubnet2RouteTableAssociationAB4E8250",
+        "FileManagerVPCPublicSubnet2Subnet98544FE8",
+        "FileManagerVPC1059B40D",
+        "FileManagerVPCVPCGW469E0D0C"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/Resource/CreationRole/Resource"
+      }
+    },
+    "FileManagerClusterCreationRoleDefaultPolicyBAC44067": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "iam:PassRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "FileManagerClusterRole95E9C239",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "eks:CreateCluster",
+                "eks:DescribeCluster",
+                "eks:DescribeUpdate",
+                "eks:DeleteCluster",
+                "eks:UpdateClusterVersion",
+                "eks:UpdateClusterConfig",
+                "eks:CreateFargateProfile",
+                "eks:TagResource",
+                "eks:UntagResource"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":eks:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":cluster/FileManagerCluster"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":eks:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":cluster/FileManagerCluster/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "eks:DescribeFargateProfile",
+                "eks:DeleteFargateProfile"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":eks:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":fargateprofile/FileManagerCluster/*"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": [
+                "iam:GetRole",
+                "iam:listAttachedRolePolicies"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": "iam:CreateServiceLinkedRole",
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeRouteTables",
+                "ec2:DescribeDhcpOptions",
+                "ec2:DescribeVpcs"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:ecr:us-east-2:392638527962:repository/filemanager"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "FileManagerClusterCreationRoleDefaultPolicyBAC44067",
+        "Roles": [
+          {
+            "Ref": "FileManagerClusterCreationRole46280444"
+          }
+        ]
+      },
+      "DependsOn": [
+        "FileManagerVPCIGW66C37AE4",
+        "FileManagerVPCPrivateSubnet1DefaultRoute86AF5EA2",
+        "FileManagerVPCPrivateSubnet1RouteTable3205DF9E",
+        "FileManagerVPCPrivateSubnet1RouteTableAssociation4C9BD50F",
+        "FileManagerVPCPrivateSubnet1SubnetEEEBBE93",
+        "FileManagerVPCPrivateSubnet2DefaultRoute0FFBC65C",
+        "FileManagerVPCPrivateSubnet2RouteTable4E75DFC4",
+        "FileManagerVPCPrivateSubnet2RouteTableAssociation21626271",
+        "FileManagerVPCPrivateSubnet2SubnetC95A4B0B",
+        "FileManagerVPCPublicSubnet1DefaultRouteE732895E",
+        "FileManagerVPCPublicSubnet1EIPA4EAEF0D",
+        "FileManagerVPCPublicSubnet1NATGateway186E71DD",
+        "FileManagerVPCPublicSubnet1RouteTable9E0EB4B3",
+        "FileManagerVPCPublicSubnet1RouteTableAssociationDC3595E9",
+        "FileManagerVPCPublicSubnet1Subnet3C466787",
+        "FileManagerVPCPublicSubnet2DefaultRouteA5402478",
+        "FileManagerVPCPublicSubnet2RouteTable5AACA1E5",
+        "FileManagerVPCPublicSubnet2RouteTableAssociationAB4E8250",
+        "FileManagerVPCPublicSubnet2Subnet98544FE8",
+        "FileManagerVPC1059B40D",
+        "FileManagerVPCVPCGW469E0D0C"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/Resource/CreationRole/DefaultPolicy/Resource"
+      }
+    },
+    "FileManagerClusterF75C848F": {
+      "Type": "Custom::AWSCDK-EKS-Cluster",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "awscdkawseksClusterResourceProviderNestedStackawscdkawseksClusterResourceProviderNestedStackResource9827C454",
+            "Outputs.FileManagerInfraStackawscdkawseksClusterResourceProviderframeworkonEventBE34F401Arn"
+          ]
+        },
+        "Config": {
+          "name": "FileManagerCluster",
+          "version": "1.21",
+          "roleArn": {
+            "Fn::GetAtt": [
+              "FileManagerClusterRole95E9C239",
+              "Arn"
+            ]
+          },
+          "resourcesVpcConfig": {
+            "subnetIds": [
+              {
+                "Ref": "FileManagerVPCPublicSubnet1Subnet3C466787"
+              },
+              {
+                "Ref": "FileManagerVPCPublicSubnet2Subnet98544FE8"
+              },
+              {
+                "Ref": "FileManagerVPCPrivateSubnet1SubnetEEEBBE93"
+              },
+              {
+                "Ref": "FileManagerVPCPrivateSubnet2SubnetC95A4B0B"
+              }
+            ],
+            "securityGroupIds": [
+              {
+                "Fn::GetAtt": [
+                  "FileManagerClusterControlPlaneSecurityGroup7E705CD1",
+                  "GroupId"
+                ]
+              }
+            ],
+            "endpointPublicAccess": true,
+            "endpointPrivateAccess": true
+          }
+        },
+        "AssumeRoleArn": {
+          "Fn::GetAtt": [
+            "FileManagerClusterCreationRole46280444",
+            "Arn"
+          ]
+        },
+        "AttributesRevision": 2
+      },
+      "DependsOn": [
+        "FileManagerClusterCreationRoleDefaultPolicyBAC44067",
+        "FileManagerClusterCreationRole46280444",
+        "FileManagerVPCIGW66C37AE4",
+        "FileManagerVPCPrivateSubnet1DefaultRoute86AF5EA2",
+        "FileManagerVPCPrivateSubnet1RouteTable3205DF9E",
+        "FileManagerVPCPrivateSubnet1RouteTableAssociation4C9BD50F",
+        "FileManagerVPCPrivateSubnet1SubnetEEEBBE93",
+        "FileManagerVPCPrivateSubnet2DefaultRoute0FFBC65C",
+        "FileManagerVPCPrivateSubnet2RouteTable4E75DFC4",
+        "FileManagerVPCPrivateSubnet2RouteTableAssociation21626271",
+        "FileManagerVPCPrivateSubnet2SubnetC95A4B0B",
+        "FileManagerVPCPublicSubnet1DefaultRouteE732895E",
+        "FileManagerVPCPublicSubnet1EIPA4EAEF0D",
+        "FileManagerVPCPublicSubnet1NATGateway186E71DD",
+        "FileManagerVPCPublicSubnet1RouteTable9E0EB4B3",
+        "FileManagerVPCPublicSubnet1RouteTableAssociationDC3595E9",
+        "FileManagerVPCPublicSubnet1Subnet3C466787",
+        "FileManagerVPCPublicSubnet2DefaultRouteA5402478",
+        "FileManagerVPCPublicSubnet2RouteTable5AACA1E5",
+        "FileManagerVPCPublicSubnet2RouteTableAssociationAB4E8250",
+        "FileManagerVPCPublicSubnet2Subnet98544FE8",
+        "FileManagerVPC1059B40D",
+        "FileManagerVPCVPCGW469E0D0C"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/Resource/Resource/Default"
+      }
+    },
+    "FileManagerClusterKubectlReadyBarrierEC558E47": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "aws:cdk:eks:kubectl-ready"
+      },
+      "DependsOn": [
+        "FileManagerClusterCreationRoleDefaultPolicyBAC44067",
+        "FileManagerClusterCreationRole46280444",
+        "FileManagerClusterF75C848F"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/KubectlReadyBarrier"
+      }
+    },
+    "FileManagerClusterMastersRole9FCF398F": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/MastersRole/Resource"
+      }
+    },
+    "FileManagerClusterAwsAuthmanifestFAA77970": {
+      "Type": "Custom::AWSCDK-EKS-KubernetesResource",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B",
+            "Outputs.FileManagerInfraStackawscdkawseksKubectlProviderframeworkonEvent3E36D016Arn"
+          ]
+        },
+        "Manifest": {
+          "Fn::Join": [
+            "",
+            [
+              "[{\"apiVersion\":\"v1\",\"kind\":\"ConfigMap\",\"metadata\":{\"name\":\"aws-auth\",\"namespace\":\"kube-system\",\"labels\":{\"aws.cdk.eks/prune-c84a73b982a09a15cad32338baca84afa84c61fa30\":\"\"}},\"data\":{\"mapRoles\":\"[{\\\"rolearn\\\":\\\"",
+              {
+                "Fn::GetAtt": [
+                  "FileManagerClusterMastersRole9FCF398F",
+                  "Arn"
+                ]
+              },
+              "\\\",\\\"username\\\":\\\"",
+              {
+                "Fn::GetAtt": [
+                  "FileManagerClusterMastersRole9FCF398F",
+                  "Arn"
+                ]
+              },
+              "\\\",\\\"groups\\\":[\\\"system:masters\\\"]},{\\\"rolearn\\\":\\\"",
+              {
+                "Fn::GetAtt": [
+                  "FileManagerClusterNodegroupDefaultCapacityNodeGroupRole8F9A0618",
+                  "Arn"
+                ]
+              },
+              "\\\",\\\"username\\\":\\\"system:node:{{EC2PrivateDNSName}}\\\",\\\"groups\\\":[\\\"system:bootstrappers\\\",\\\"system:nodes\\\"]}]\",\"mapUsers\":\"[]\",\"mapAccounts\":\"[]\"}}]"
+            ]
+          ]
+        },
+        "ClusterName": {
+          "Ref": "FileManagerClusterF75C848F"
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "FileManagerClusterCreationRole46280444",
+            "Arn"
+          ]
+        },
+        "PruneLabel": "aws.cdk.eks/prune-c84a73b982a09a15cad32338baca84afa84c61fa30",
+        "Overwrite": true
+      },
+      "DependsOn": [
+        "FileManagerClusterKubectlReadyBarrierEC558E47"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/AwsAuth/manifest/Resource/Default"
+      }
+    },
+    "FileManagerClusterNodegroupDefaultCapacityNodeGroupRole8F9A0618": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "ec2.",
+                      {
+                        "Ref": "AWS::URLSuffix"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonEKSWorkerNodePolicy"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonEKS_CNI_Policy"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/NodegroupDefaultCapacity/NodeGroupRole/Resource"
+      }
+    },
+    "FileManagerClusterNodegroupDefaultCapacityNodeGroupRoleDefaultPolicy5483A128": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:ecr:us-east-2:392638527962:repository/filemanager"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "FileManagerClusterNodegroupDefaultCapacityNodeGroupRoleDefaultPolicy5483A128",
+        "Roles": [
+          {
+            "Ref": "FileManagerClusterNodegroupDefaultCapacityNodeGroupRole8F9A0618"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/NodegroupDefaultCapacity/NodeGroupRole/DefaultPolicy/Resource"
+      }
+    },
+    "FileManagerClusterNodegroupDefaultCapacity2A103F33": {
+      "Type": "AWS::EKS::Nodegroup",
+      "Properties": {
+        "ClusterName": {
+          "Ref": "FileManagerClusterF75C848F"
+        },
+        "NodeRole": {
+          "Fn::GetAtt": [
+            "FileManagerClusterNodegroupDefaultCapacityNodeGroupRole8F9A0618",
+            "Arn"
+          ]
+        },
+        "Subnets": [
+          {
+            "Ref": "FileManagerVPCPrivateSubnet1SubnetEEEBBE93"
+          },
+          {
+            "Ref": "FileManagerVPCPrivateSubnet2SubnetC95A4B0B"
+          }
+        ],
+        "AmiType": "AL2_x86_64",
+        "ForceUpdateEnabled": true,
+        "InstanceTypes": [
+          "m5.large"
+        ],
+        "ScalingConfig": {
+          "DesiredSize": 2,
+          "MaxSize": 2,
+          "MinSize": 2
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/NodegroupDefaultCapacity/Resource"
+      }
+    },
+    "FileManagerClustermanifestSpringBootAppDeployment3FA0129E": {
+      "Type": "Custom::AWSCDK-EKS-KubernetesResource",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B",
+            "Outputs.FileManagerInfraStackawscdkawseksKubectlProviderframeworkonEvent3E36D016Arn"
+          ]
+        },
+        "Manifest": "[{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"name\":\"springboot-app\",\"labels\":{\"aws.cdk.eks/prune-c8783ac27d10174bd61d8b3e3220e8930e070e9485\":\"\"}},\"spec\":{\"replicas\":2,\"selector\":{\"matchLabels\":{\"app\":\"springboot-app\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"springboot-app\"}},\"spec\":{\"containers\":[{\"name\":\"springboot-app\",\"image\":\"392638527962.dkr.ecr.us-east-2.amazonaws.com/filemanager/v1\",\"ports\":[{\"containerPort\":8080}]}]}}}}]",
+        "ClusterName": {
+          "Ref": "FileManagerClusterF75C848F"
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "FileManagerClusterCreationRole46280444",
+            "Arn"
+          ]
+        },
+        "PruneLabel": "aws.cdk.eks/prune-c8783ac27d10174bd61d8b3e3220e8930e070e9485"
+      },
+      "DependsOn": [
+        "FileManagerClusterKubectlReadyBarrierEC558E47"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/manifest-SpringBootAppDeployment/Resource/Default"
+      }
+    },
+    "FileManagerClustermanifestSpringBootAppServiceE93843C4": {
+      "Type": "Custom::AWSCDK-EKS-KubernetesResource",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B",
+            "Outputs.FileManagerInfraStackawscdkawseksKubectlProviderframeworkonEvent3E36D016Arn"
+          ]
+        },
+        "Manifest": "[{\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"name\":\"springboot-service\",\"labels\":{\"aws.cdk.eks/prune-c883f02550c34810ab1d0ba2da855fc2aaf1775225\":\"\"}},\"spec\":{\"type\":\"LoadBalancer\",\"selector\":{\"app\":\"springboot-app\"},\"ports\":[{\"port\":80,\"targetPort\":8080}]}}]",
+        "ClusterName": {
+          "Ref": "FileManagerClusterF75C848F"
+        },
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "FileManagerClusterCreationRole46280444",
+            "Arn"
+          ]
+        },
+        "PruneLabel": "aws.cdk.eks/prune-c883f02550c34810ab1d0ba2da855fc2aaf1775225"
+      },
+      "DependsOn": [
+        "FileManagerClusterKubectlReadyBarrierEC558E47"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerCluster/manifest-SpringBootAppService/Resource/Default"
+      }
+    },
+    "awscdkawseksClusterResourceProviderNestedStackawscdkawseksClusterResourceProviderNestedStackResource9827C454": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://s3.",
+              {
+                "Ref": "AWS::Region"
+              },
+              ".",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              {
+                "Ref": "AssetParameters0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117S3Bucket5AA4B889"
+              },
+              "/",
+              {
+                "Fn::Select": [
+                  0,
+                  {
+                    "Fn::Split": [
+                      "||",
+                      {
+                        "Ref": "AssetParameters0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117S3VersionKeyD8087286"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "||",
+                      {
+                        "Ref": "AssetParameters0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117S3VersionKeyD8087286"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "Parameters": {
+          "referencetoFileManagerInfraStackFileManagerClusterCreationRole6ECB196AArn": {
+            "Fn::GetAtt": [
+              "FileManagerClusterCreationRole46280444",
+              "Arn"
+            ]
+          },
+          "referencetoFileManagerInfraStackAssetParametersaa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5S3Bucket446995D9Ref": {
+            "Ref": "AssetParametersaa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5S3BucketDCF2C5E6"
+          },
+          "referencetoFileManagerInfraStackAssetParametersaa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5S3VersionKeyA3C74682Ref": {
+            "Ref": "AssetParametersaa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5S3VersionKey14A74995"
+          },
+          "referencetoFileManagerInfraStackAssetParametersca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864ccS3Bucket94372E40Ref": {
+            "Ref": "AssetParametersca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864ccS3Bucket40405135"
+          },
+          "referencetoFileManagerInfraStackAssetParametersca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864ccS3VersionKey134B8EEBRef": {
+            "Ref": "AssetParametersca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864ccS3VersionKey50B477EB"
+          },
+          "referencetoFileManagerInfraStackAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketE6BE4624Ref": {
+            "Ref": "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43"
+          },
+          "referencetoFileManagerInfraStackAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKey21D90BB5Ref": {
+            "Ref": "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7"
+          }
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/@aws-cdk--aws-eks.ClusterResourceProvider.NestedStack/@aws-cdk--aws-eks.ClusterResourceProvider.NestedStackResource"
+      }
+    },
+    "awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://s3.",
+              {
+                "Ref": "AWS::Region"
+              },
+              ".",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              {
+                "Ref": "AssetParametersafecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817fS3Bucket007DF7FB"
+              },
+              "/",
+              {
+                "Fn::Select": [
+                  0,
+                  {
+                    "Fn::Split": [
+                      "||",
+                      {
+                        "Ref": "AssetParametersafecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817fS3VersionKeyA901F21F"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Fn::Select": [
+                  1,
+                  {
+                    "Fn::Split": [
+                      "||",
+                      {
+                        "Ref": "AssetParametersafecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817fS3VersionKeyA901F21F"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "Parameters": {
+          "referencetoFileManagerInfraStackFileManagerCluster0DAE9E6DArn": {
+            "Fn::GetAtt": [
+              "FileManagerClusterF75C848F",
+              "Arn"
+            ]
+          },
+          "referencetoFileManagerInfraStackFileManagerClusterCreationRole6ECB196AArn": {
+            "Fn::GetAtt": [
+              "FileManagerClusterCreationRole46280444",
+              "Arn"
+            ]
+          },
+          "referencetoFileManagerInfraStackAssetParameters4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10S3Bucket7BBE89C7Ref": {
+            "Ref": "AssetParameters4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10S3BucketC6FAEEC9"
+          },
+          "referencetoFileManagerInfraStackAssetParameters4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10S3VersionKeyF40FF253Ref": {
+            "Ref": "AssetParameters4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10S3VersionKeyA7EE7421"
+          },
+          "referencetoFileManagerInfraStackFileManagerVPCPrivateSubnet1SubnetC1952DEFRef": {
+            "Ref": "FileManagerVPCPrivateSubnet1SubnetEEEBBE93"
+          },
+          "referencetoFileManagerInfraStackFileManagerVPCPrivateSubnet2Subnet3EA17F6ERef": {
+            "Ref": "FileManagerVPCPrivateSubnet2SubnetC95A4B0B"
+          },
+          "referencetoFileManagerInfraStackFileManagerCluster0DAE9E6DClusterSecurityGroupId": {
+            "Fn::GetAtt": [
+              "FileManagerClusterF75C848F",
+              "ClusterSecurityGroupId"
+            ]
+          },
+          "referencetoFileManagerInfraStackAssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3BucketECF0C339Ref": {
+            "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3BucketAEADE8C7"
+          },
+          "referencetoFileManagerInfraStackAssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKey7B2784E8Ref": {
+            "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKeyE415415F"
+          },
+          "referencetoFileManagerInfraStackAssetParametersea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03eS3Bucket02C78C99Ref": {
+            "Ref": "AssetParametersea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03eS3BucketD3288998"
+          },
+          "referencetoFileManagerInfraStackAssetParametersea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03eS3VersionKey49B96F76Ref": {
+            "Ref": "AssetParametersea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03eS3VersionKeyB00C0565"
+          },
+          "referencetoFileManagerInfraStackAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketE6BE4624Ref": {
+            "Ref": "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43"
+          },
+          "referencetoFileManagerInfraStackAssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKey21D90BB5Ref": {
+            "Ref": "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7"
+          }
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/@aws-cdk--aws-eks.KubectlProvider.NestedStack/@aws-cdk--aws-eks.KubectlProvider.NestedStackResource"
+      }
+    },
+    "FileManagerTable5A09D678": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "user",
+            "KeyType": "RANGE"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "user",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "filename",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "user-index",
+            "KeySchema": [
+              {
+                "AttributeName": "user",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          },
+          {
+            "IndexName": "user-filename-index",
+            "KeySchema": [
+              {
+                "AttributeName": "user",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "filename",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          },
+          {
+            "IndexName": "filename-index",
+            "KeySchema": [
+              {
+                "AttributeName": "filename",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          }
+        ],
+        "TableName": "filemanager"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerTable/Resource"
+      }
+    },
+    "FileStorageBucket10E371B0": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "wd-filemanager"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileStorageBucket/Resource"
+      }
+    },
+    "ReactAppHostingBucketC783D28B": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "react-app-hosting-bucket",
+        "WebsiteConfiguration": {
+          "ErrorDocument": "error.html",
+          "IndexDocument": "index.html"
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/ReactAppHostingBucket/Resource"
+      }
+    },
+    "ReactAppHostingBucketPolicy1111370F": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ReactAppHostingBucketC783D28B"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "ReactAppHostingBucketC783D28B",
+                        "Arn"
+                      ]
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/ReactAppHostingBucket/Policy/Resource"
+      }
+    },
+    "FileManagerApi31D26797": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Description": "API Gateway para exponer los servicios de la app Spring Boot.",
+        "Name": "FileManagerApi"
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/Resource"
+      }
+    },
+    "FileManagerApiCloudWatchRole05DF5A36": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/CloudWatchRole/Resource"
+      }
+    },
+    "FileManagerApiAccount016420B6": {
+      "Type": "AWS::ApiGateway::Account",
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "FileManagerApiCloudWatchRole05DF5A36",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "FileManagerApi31D26797"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/Account"
+      }
+    },
+    "FileManagerApiDeployment8B067971da3e25b5aed2d7d389d6794c034b3f0e": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "FileManagerApi31D26797"
+        },
+        "Description": "Automatically created by the RestApi construct"
+      },
+      "DependsOn": [
+        "FileManagerApifilesDELETEDAF2BAB9",
+        "FileManagerApifilesGET69AF5890",
+        "FileManagerApifilesPOSTB09039DF",
+        "FileManagerApifilesCD055B40"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/Deployment/Resource"
+      }
+    },
+    "FileManagerApiDeploymentStagedevC4AC80B9": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "FileManagerApi31D26797"
+        },
+        "DeploymentId": {
+          "Ref": "FileManagerApiDeployment8B067971da3e25b5aed2d7d389d6794c034b3f0e"
+        },
+        "StageName": "dev"
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/DeploymentStage.dev/Resource"
+      }
+    },
+    "FileManagerApifilesCD055B40": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "FileManagerApi31D26797",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "files",
+        "RestApiId": {
+          "Ref": "FileManagerApi31D26797"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/Default/files/Resource"
+      }
+    },
+    "FileManagerApifilesGET69AF5890": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "FileManagerApifilesCD055B40"
+        },
+        "RestApiId": {
+          "Ref": "FileManagerApi31D26797"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "ConnectionType": "INTERNET",
+          "IntegrationHttpMethod": "ANY",
+          "Type": "HTTP_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "http://",
+                {
+                  "Fn::GetAtt": [
+                    "SpringBootAppService",
+                    "status.loadBalancer.ingress[0].hostname"
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/Default/files/GET/Resource"
+      }
+    },
+    "FileManagerApifilesPOSTB09039DF": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "ResourceId": {
+          "Ref": "FileManagerApifilesCD055B40"
+        },
+        "RestApiId": {
+          "Ref": "FileManagerApi31D26797"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "ConnectionType": "INTERNET",
+          "IntegrationHttpMethod": "ANY",
+          "Type": "HTTP_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "http://",
+                {
+                  "Fn::GetAtt": [
+                    "SpringBootAppService",
+                    "status.loadBalancer.ingress[0].hostname"
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/Default/files/POST/Resource"
+      }
+    },
+    "FileManagerApifilesDELETEDAF2BAB9": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "ResourceId": {
+          "Ref": "FileManagerApifilesCD055B40"
+        },
+        "RestApiId": {
+          "Ref": "FileManagerApi31D26797"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "ConnectionType": "INTERNET",
+          "IntegrationHttpMethod": "ANY",
+          "Type": "HTTP_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "http://",
+                {
+                  "Fn::GetAtt": [
+                    "SpringBootAppService",
+                    "status.loadBalancer.ingress[0].hostname"
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/FileManagerApi/Default/files/DELETE/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/22SwU7DMAyGn4V7CGxIiCOlIIQQUHWIu5t6W1gbV4nDVEV5d5RmtDtw8vc70R879kqu1nfy+uIeju5StYeroMiiDBsGdRA1OvJWoSjJOLZesSi9Y+qXg6055w/Pg+dE2aDcmgos9MhokyjJtJo1mSjSgwHVWoavQaWzr6oUlW86rTa+MZhdZqrJM35C0+GSX3KFc6Q0JOf5coKnlyqFd+BnYDzCKCqrf4BxMX4xjNbgfCFXclIFM6h9j4bFBpW3msdnS36YajhPRIEHJ0PZeZdaLY6u8LwXr76ZzNG9gdFbdCzeqcXdn8csotDQy1BT7m+KFXVaTQVliqIdDfTUNjLMPzFBFO5GhgevDrmnE+Ww2JzrKGDQu9ylDDU6LgZ9GucfFkqRNywecehonH6h3JoztWHY4WnaO5zX5QEcin9X5A15T21KZYoximrkPZmrG7lay9uLb6f1pfWGdY+yzvEX9YOAT6UCAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "FileManagerInfraStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Outputs": {
+    "FileManagerClusterConfigCommand961EAC8E": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "aws eks update-kubeconfig --name ",
+            {
+              "Ref": "FileManagerClusterF75C848F"
+            },
+            " --region ",
+            {
+              "Ref": "AWS::Region"
+            },
+            " --role-arn ",
+            {
+              "Fn::GetAtt": [
+                "FileManagerClusterMastersRole9FCF398F",
+                "Arn"
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "FileManagerClusterGetTokenCommand8FF71F13": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "aws eks get-token --cluster-name ",
+            {
+              "Ref": "FileManagerClusterF75C848F"
+            },
+            " --region ",
+            {
+              "Ref": "AWS::Region"
+            },
+            " --role-arn ",
+            {
+              "Fn::GetAtt": [
+                "FileManagerClusterMastersRole9FCF398F",
+                "Arn"
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "FileManagerApiEndpointB16BB9AC": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "FileManagerApi31D26797"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "FileManagerApiDeploymentStagedevC4AC80B9"
+            },
+            "/"
+          ]
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "AssetParametersaa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5S3BucketDCF2C5E6": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"aa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5\""
+    },
+    "AssetParametersaa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5S3VersionKey14A74995": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"aa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5\""
+    },
+    "AssetParametersaa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5ArtifactHash3EDFDAA1": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"aa417b9073765a3bea6f13c9f810b7a8b342bfae384f894ea1686b5a96db26c5\""
+    },
+    "AssetParametersca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864ccS3Bucket40405135": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"ca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864cc\""
+    },
+    "AssetParametersca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864ccS3VersionKey50B477EB": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"ca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864cc\""
+    },
+    "AssetParametersca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864ccArtifactHashCC7E7A09": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"ca2c913ffc0cd2016ee8bae9a571d12d6eca2284408cb99dd0ebff5b061864cc\""
+    },
+    "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c\""
+    },
+    "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c\""
+    },
+    "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cArtifactHash627DAAA7": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c\""
+    },
+    "AssetParameters4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10S3BucketC6FAEEC9": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10\""
+    },
+    "AssetParameters4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10S3VersionKeyA7EE7421": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10\""
+    },
+    "AssetParameters4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10ArtifactHash528547CD": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"4129bbca38164ecb28fee8e5b674f0d05e5957b4b8ed97d9c950527b5cc4ce10\""
+    },
+    "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3BucketAEADE8C7": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68\""
+    },
+    "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKeyE415415F": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68\""
+    },
+    "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68ArtifactHashD9A515C3": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68\""
+    },
+    "AssetParametersea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03eS3BucketD3288998": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"ea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03e\""
+    },
+    "AssetParametersea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03eS3VersionKeyB00C0565": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"ea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03e\""
+    },
+    "AssetParametersea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03eArtifactHash4654D012": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"ea17febe6d04c66048f3e8e060c71685c0cb53122abceff44842d27bc0d4a03e\""
+    },
+    "AssetParameters0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117S3Bucket5AA4B889": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117\""
+    },
+    "AssetParameters0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117S3VersionKeyD8087286": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117\""
+    },
+    "AssetParameters0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117ArtifactHash6586A6A2": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"0ab39281a94bb77069b2cefdfef27b7a8de91baa10b372d2114e3b6bc8518117\""
+    },
+    "AssetParametersafecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817fS3Bucket007DF7FB": {
+      "Type": "String",
+      "Description": "S3 bucket for asset \"afecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817f\""
+    },
+    "AssetParametersafecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817fS3VersionKeyA901F21F": {
+      "Type": "String",
+      "Description": "S3 key for asset version \"afecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817f\""
+    },
+    "AssetParametersafecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817fArtifactHash42E5E4C5": {
+      "Type": "String",
+      "Description": "Artifact hash for asset \"afecfa37797dea2e6300e02fd3a35c5ece0274334599cbe186cf98e4db81817f\""
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
